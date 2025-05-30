@@ -8,6 +8,7 @@
       margin: 0;
       background: white;
     }
+
     svg {
       width: 100%;
       height: auto;
@@ -15,17 +16,23 @@
       display: block;
       margin-bottom: 2rem;
     }
+
     .grid25 {
       stroke: #99ccee;
       stroke-width: 0.01;
     }
+
     .grid100 {
       stroke: #3377bb;
       stroke-width: 0.03;
     }
   </style>
 </head>
+
 <body>
+  <h1>Underground pond</h1>
+  <svg id="canvas-pond" viewBox="0 0 11 9" xmlns="http://www.w3.org/2000/svg"></svg>
+
   <h1>Ground floor</h1>
   <svg id="canvas-ground" viewBox="0 0 11 9" xmlns="http://www.w3.org/2000/svg"></svg>
   <ul>
@@ -40,6 +47,7 @@
   <ul>
     <li><b>Bedroom:</b> goes right above the dome, possibly suspended and covered by a woolen blanket.</li>
     PERHAPS DOME not dome after all, but rather with a wooden ceiling? but then it could be buffering somewhat poorly? Think it through well. Also, how about the glass blocks?
+    expanded metal ring around, wooden floor above the dome
   </ul>
 
   <script>
@@ -126,27 +134,81 @@
       }
     }
 
+    function drawRect(svg, {
+      cx, cy,
+      width, height,
+      rotation = 0,
+      stroke = 'black',
+      strokeWidth = 0.03,
+      opacity = 0.8,
+      rx = 0.3,            // horizontal corner radius
+      ry = 0.3             // vertical corner radius
+    }) {
+      const rect = document.createElementNS(svg.namespaceURI, 'rect')
+      rect.setAttribute('x', (-width / 2).toString())
+      rect.setAttribute('y', (-height / 2).toString())
+      rect.setAttribute('width', width.toString())
+      rect.setAttribute('height', height.toString())
+      rect.setAttribute('fill', 'none')
+      rect.setAttribute('stroke', stroke)
+      rect.setAttribute('stroke-width', strokeWidth.toString())
+      rect.setAttribute('stroke-opacity', opacity.toString())
+      rect.setAttribute('transform', `translate(${cx}, ${cy}) rotate(${rotation})`)
+      if (rx > 0) rect.setAttribute('rx', rx.toString())
+      if (ry > 0) rect.setAttribute('ry', ry.toString())
+      svg.appendChild(rect)
+    }
+
     function drawStaircase(svg, { cx, cy, stairTowerRatio = 3.5 / 5 }) {
       drawEllipse(svg, {cx, cy, width: 3.7, ratio: stairTowerRatio, stroke: '#888', strokeWidth: 0.50})
       drawEllipse(svg, {cx, cy, width: 1, ratio: stairTowerRatio, stroke: 'dodgerblue', strokeWidth: 0.50})
       drawEllipticalRacks(svg, {cx, cy, width: 2.3, ratio: stairTowerRatio, offset: 0.1, count: 16, length: 0.80, widthRack: 0.3})
     }
 
+    function drawBananaPlant(svg, {cx, cy}) {
+      drawEllipticalRacks(svg, {cx, cy, width: 0.1, ratio: 1, color: 'green', count: 7})
+    }
+
     // Set up canvases
+    const pond = document.getElementById('canvas-pond')
     const ground = document.getElementById('canvas-ground')
     const upper = document.getElementById('canvas-upper')
 
+    showGrid(pond, 11, 9)
     showGrid(ground, 11, 9)
     showGrid(upper, 11, 9)
 
-    const centreX = 5.5
-    const centreY = 3.5
+    const centreX = 5.5 // doesn't change
+    const centreY = 5.8
 
+    /* Ground floor */
     drawEllipse(ground, {cx: centreX, cy: centreY, width: 5, ratio: 3/5, stroke: '#e63946', strokeWidth: 0.3})
     drawEllipse(ground, {cx: centreX, cy: centreY, width: 8.2, ratio: 3.5/5, stroke: '#888', strokeWidth: 0.50})
     drawEllipticalRacks(ground, {cx: centreX, cy: centreY, width: 6.3, ratio: 3.25/5, offset: 0.1, count: 16, length:
 0.80, widthRack: 0.4})
-    drawStaircase(ground, {cx: 5.5, cy: 7.7})
+    drawStaircase(ground, {cx: centreX, cy: 1.7})
+
+    /* Upper floor */
+    drawEllipse(upper, {cx: centreX, cy: centreY, width: 5, ratio: 3/5, stroke: '#e63946', strokeWidth: 0.1})
+    drawEllipse(upper, {cx: centreX, cy: centreY, width: 8.2, ratio: 3.5/5, stroke: '#888', strokeWidth: 0.50})
+    drawBananaPlant(upper, {cx: centreX - 3, cy: centreY})
+    drawBananaPlant(upper, {cx: centreX + 3, cy: centreY})
+
+    drawBananaPlant(upper, {cx: centreX - 2.3, cy: centreY - 1.4})
+    drawBananaPlant(upper, {cx: centreX + 2.3, cy: centreY + 1.4})
+
+    drawBananaPlant(upper, {cx: centreX - 2.3, cy: centreY + 1.4})
+    drawBananaPlant(upper, {cx: centreX + 2.3, cy: centreY - 1.4})
+
+    drawBananaPlant(upper, {cx: centreX - 0.8, cy: centreY - 2})
+    drawBananaPlant(upper, {cx: centreX + 0.8, cy: centreY + 2})
+
+    drawBananaPlant(upper, {cx: centreX - 0.8, cy: centreY + 2})
+    drawBananaPlant(upper, {cx: centreX + 0.8, cy: centreY - 2})
+
+    drawStaircase(upper, {cx: centreX, cy: 1.7})
+    drawRect(upper, {cx: 8.7, cy: 2.5, width: 3, height: 2, strokeWidth: 0.50, stroke: "#888", rotation: 25})
+    drawRect(upper, {cx: 2.2, cy: 2.5, width: 3, height: 2, strokeWidth: 0.50, stroke: "#888", rotation: -25})
   </script>
 </body>
 </html>
