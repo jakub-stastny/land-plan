@@ -2,80 +2,86 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Parametric Ellipse with Grid</title>
+  <title>Ground level plan</title>
   <style>
     body {
       margin: 0;
       background: white;
     }
+
     svg {
       width: 100%;
       height: auto;
       max-height: 297mm;
       display: block;
     }
-    .grid {
-      stroke: #ccf;
-      stroke-width: 0.002;
+
+    .grid25 {
+      stroke: #99ccee;
+      stroke-width: 0.01;
+    }
+
+    .grid100 {
+      stroke: #3377bb;
+      stroke-width: 0.03;
     }
   </style>
 </head>
 <body>
-  <svg id="canvas" viewBox="0 0 10 7" xmlns="http://www.w3.org/2000/svg"></svg>
+  <svg id="canvas" viewBox="0 0 11 9" xmlns="http://www.w3.org/2000/svg"></svg>
 
   <script>
-    const svg = document.getElementById('canvas');
-    const svgNS = svg.namespaceURI;
+    const svg = document.getElementById('canvas')
+    const svgNS = svg.namespaceURI
 
-    // ⬛ Grid: 0.25 x 0.25 m
-    for (let x = 0.25; x < 10; x += 0.25) {
-      const line = document.createElementNS(svgNS, 'line');
-      line.setAttribute('x1', x);
-      line.setAttribute('y1', '0');
-      line.setAttribute('x2', x);
-      line.setAttribute('y2', '7');
-      line.setAttribute('class', 'grid');
-      svg.appendChild(line);
-    }
-    for (let y = 0.25; y < 7; y += 0.25) {
-      const line = document.createElementNS(svgNS, 'line');
-      line.setAttribute('x1', '0');
-      line.setAttribute('y1', y);
-      line.setAttribute('x2', '10');
-      line.setAttribute('y2', y);
-      line.setAttribute('class', 'grid');
-      svg.appendChild(line);
+    const gridSpacing = 0.25
+    const maxX = 11
+    const maxY = 9
+
+    for (let x = 0; x <= maxX + 0.0001; x += gridSpacing ) {
+      const line = document.createElementNS(svgNS, 'line')
+      line.setAttribute('x1', x.toString())
+      line.setAttribute('y1', '0')
+      line.setAttribute('x2', x.toString())
+      line.setAttribute('y2', maxY.toString())
+      line.setAttribute('class', (Math.abs(x % 1) < 1e-6) ? 'grid100' : 'grid25')
+      console.log(line)
+      svg.appendChild(line)
     }
 
-    // ⭕ Parametric ellipse function
-    function drawEllipse({ cx, cy, width, ratio, stroke, strokeWidth }) {
-      const ellipse = document.createElementNS(svgNS, 'ellipse');
-      ellipse.setAttribute('cx', cx);
-      ellipse.setAttribute('cy', cy);
-      ellipse.setAttribute('rx', width / 2);
-      ellipse.setAttribute('ry', (width * ratio) / 2);
-      ellipse.setAttribute('fill', 'none');
-      ellipse.setAttribute('stroke', stroke);
-      ellipse.setAttribute('stroke-width', strokeWidth);
-      svg.appendChild(ellipse);
+    for (let y = 0; y <= maxY + 0.0001; y += gridSpacing) {
+      const line = document.createElementNS(svgNS, 'line')
+      line.setAttribute('x1', '0')
+      line.setAttribute('y1', y.toString())
+      line.setAttribute('x2', maxX.toString())
+      line.setAttribute('y2', y.toString())
+      line.setAttribute('class', (Math.abs(y % 1) < 1e-6) ? 'grid100' : 'grid25')
+      svg.appendChild(line)
     }
 
-    // ✅ Examples
-    drawEllipse({
-      cx: 5, cy: 3.5,
-      width: 5,
-      ratio: 3 / 5,
-      stroke: '#e63946',
-      strokeWidth: 0.3 // wall thickness in metres
-    });
+    function drawEllipse({ cx = 5.5, cy = 4.5, width, ratio, stroke, strokeWidth, opacity = 1 }) {
+      const ellipse = document.createElementNS(svgNS, 'ellipse')
+      ellipse.setAttribute('cx', cx)
+      ellipse.setAttribute('cy', cy)
+      ellipse.setAttribute('rx', width / 2)
+      ellipse.setAttribute('ry', (width * ratio) / 2)
+      ellipse.setAttribute('fill', 'none')
+      ellipse.setAttribute('stroke', stroke)
+      ellipse.setAttribute('stroke-width', strokeWidth)
+      ellipse.setAttribute('stroke-opacity', 0.8)
+      svg.appendChild(ellipse)
+    }
 
-    drawEllipse({
-      cx: 5, cy: 3.5,
-      width: 8.5,
-      ratio: 3 / 5,
-      stroke: '#888',
-      strokeWidth: 0.5
-    });
+    drawEllipse({width: 5, ratio: 3/5, stroke: '#e63946', strokeWidth: 0.3})
+    drawEllipse({width: 7, ratio: 3.5/5, stroke: 'black', strokeWidth: 0.03})
+    drawEllipse({width: 8.2, ratio: 3.75/5, stroke: 'black', strokeWidth: 0.03})
+    drawEllipse({width: 10.4, ratio: 4/5, stroke: '#888', strokeWidth: 0.5})
   </script>
+
+  <ul>
+    <li><b>Dome:</b> vents just off the ground to suck air out of the storage and circulate it properly.</li>
+    <li><b>Dome:</b> roof window to allow releasing the heat when one is inside and closing it for when we need to charge the structure with heat.</li>
+    <li><b>Dome:</b> translucent glass (bottles or glass blocks) in the ceiling.</li>
+  </ul>
 </body>
 </html>
