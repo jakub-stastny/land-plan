@@ -31,11 +31,19 @@
 
 <body>
   <h1>Underground pond</h1>
-  <svg id="canvas-pond" viewBox="0 0 11 9" xmlns="http://www.w3.org/2000/svg"></svg>
+  <svg id="canvas-pond" viewBox="0 0 11 7" xmlns="http://www.w3.org/2000/svg"></svg>
+
+  <ul>
+    <li><b>Dome floor:</b> concrete floor with glass blocks. Allow entry. Below is the deepest point with many hideouts.</li>
+    <li><b>Ring floor:</b> expanded metal, allow humidity for the plants. Several entry points.</li>
+  </ul>
 
   <h1>Ground floor</h1>
   <svg id="canvas-ground" viewBox="0 0 11 9" xmlns="http://www.w3.org/2000/svg"></svg>
   <ul>
+    <li><b>Storage:</b> below the workshops.</li>
+    <li><b>Plants:</b> coffee, tea, cacao; turmeric, ginger, cardamom. All require high humidity, perhaps re-evalute the expanded metal thingy from the fish pond. Black pepper, vanilla (requires hand pollinatin). Tulsi.</li>
+    <li><b>Height:</b> 3m to allow enough space for cacao (don't forget to count the maceta).</li>
     <li><b>Dome:</b> vents just off the ground to suck air out of the storage and circulate it properly.</li>
     <li><b>Dome:</b> roof window to allow releasing the heat when one is inside and closing it for when we need to charge the structure with heat.</li>
     <li><b>Dome:</b> translucent glass (bottles or glass blocks) in the ceiling.</li>
@@ -45,9 +53,12 @@
   <h1>Upper levels</h1>
   <svg id="canvas-upper" viewBox="0 0 11 9" xmlns="http://www.w3.org/2000/svg"></svg>
   <ul>
+    PERHAPS expanded metal with glass below, so the humid zone is sealed.
     <li><b>Bedroom:</b> goes right above the dome, possibly suspended and covered by a woolen blanket.</li>
     PERHAPS DOME not dome after all, but rather with a wooden ceiling? but then it could be buffering somewhat poorly? Think it through well. Also, how about the glass blocks?
     expanded metal ring around, wooden floor above the dome
+    maracuyá
+    coco
   </ul>
 
   <script>
@@ -169,28 +180,49 @@
       drawEllipticalRacks(svg, {cx, cy, width: 0.1, ratio: 1, color: 'green', count: 7})
     }
 
-    // Set up canvases
+    /* Set up canvases */
     const pond = document.getElementById('canvas-pond')
     const ground = document.getElementById('canvas-ground')
     const upper = document.getElementById('canvas-upper')
 
-    showGrid(pond, 11, 9)
+    showGrid(pond, 11, 7)
     showGrid(ground, 11, 9)
     showGrid(upper, 11, 9)
 
     const centreX = 5.5 // doesn't change
     const centreY = 5.8
 
+    /* Pond */
+    drawEllipse(pond, {cx: centreX, cy: centreY - 2.3, width: 5, ratio: 3/5, stroke: '#e63946', strokeWidth: 0.1})
+    drawEllipse(pond, {cx: centreX, cy: centreY - 2.3, width: 8.2, ratio: 3.5/5, stroke: '#888', strokeWidth: 0.50})
+
     /* Ground floor */
     drawEllipse(ground, {cx: centreX, cy: centreY, width: 5, ratio: 3/5, stroke: '#e63946', strokeWidth: 0.3})
     drawEllipse(ground, {cx: centreX, cy: centreY, width: 8.2, ratio: 3.5/5, stroke: '#888', strokeWidth: 0.50})
-    drawEllipticalRacks(ground, {cx: centreX, cy: centreY, width: 6.3, ratio: 3.25/5, offset: 0.1, count: 16, length:
-0.80, widthRack: 0.4})
+
+    drawBananaPlant(ground, {cx: centreX - 3, cy: centreY})
+    drawBananaPlant(ground, {cx: centreX + 3, cy: centreY})
+
+    drawBananaPlant(ground, {cx: centreX - 2.3, cy: centreY - 1.4})
+    drawBananaPlant(ground, {cx: centreX + 2.3, cy: centreY + 1.4})
+
+    drawBananaPlant(ground, {cx: centreX - 2.3, cy: centreY + 1.4})
+    drawBananaPlant(ground, {cx: centreX + 2.3, cy: centreY - 1.4})
+
+    drawBananaPlant(ground, {cx: centreX - 0.8, cy: centreY - 2})
+    drawBananaPlant(ground, {cx: centreX + 0.8, cy: centreY + 2})
+
+    drawBananaPlant(ground, {cx: centreX - 0.8, cy: centreY + 2})
+    drawBananaPlant(ground, {cx: centreX + 0.8, cy: centreY - 2})
+
     drawStaircase(ground, {cx: centreX, cy: 1.7})
+    drawRect(ground, {cx: 8.7, cy: 2.5, width: 3, height: 2, strokeWidth: 0.50, stroke: "#888", rotation: 25})
+    drawRect(ground, {cx: 2.2, cy: 2.5, width: 3, height: 2, strokeWidth: 0.50, stroke: "#888", rotation: -25})
 
     /* Upper floor */
     drawEllipse(upper, {cx: centreX, cy: centreY, width: 5, ratio: 3/5, stroke: '#e63946', strokeWidth: 0.1})
     drawEllipse(upper, {cx: centreX, cy: centreY, width: 8.2, ratio: 3.5/5, stroke: '#888', strokeWidth: 0.50})
+
     drawBananaPlant(upper, {cx: centreX - 3, cy: centreY})
     drawBananaPlant(upper, {cx: centreX + 3, cy: centreY})
 
