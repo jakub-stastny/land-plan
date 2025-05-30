@@ -121,60 +121,6 @@
       }
     }
 
-    function drawEllipticalSpiralRamp({
-      cx = centreX, cy = centreY,
-      width,
-      ratio,
-      rampWidth = 0.8,
-      turns = 1,
-      steps = 200,
-      fill = '#d16c42',
-      opacity = 0.6
-    }) {
-      const aStart = width / 2
-      const bStart = (width * ratio) / 2
-      const aEnd = aStart - rampWidth
-      const bEnd = bStart - rampWidth * ratio
-
-      const outerPoints = []
-      const innerPoints = []
-
-      for (let i = 0; i <= steps; i++) {
-        const t = i / steps
-        const angle = 2 * Math.PI * turns * t
-
-        const a = aStart - t * (aStart - aEnd)
-        const b = bStart - t * (bStart - bEnd)
-
-        const x = cx + a * Math.cos(angle)
-        const y = cy + b * Math.sin(angle)
-        outerPoints.push([x, y])
-      }
-
-      for (let i = steps; i >= 0; i--) {
-        const t = i / steps
-        const angle = 2 * Math.PI * turns * t
-
-        const a = aStart - t * (aStart - aEnd)
-        const b = bStart - t * (bStart - bEnd)
-
-        const x = cx + (a - 0.0001) * Math.cos(angle)
-        const y = cy + (b - 0.0001) * Math.sin(angle)
-        innerPoints.push([x, y])
-      }
-
-      const d = [...outerPoints, ...innerPoints].map(
-        (p, i) => (i === 0 ? 'M' : 'L') + p[0] + ' ' + p[1]
-      ).join(' ') + ' Z'
-
-      const path = document.createElementNS(svgNS, 'path')
-      path.setAttribute('d', d)
-      path.setAttribute('stroke', '#733')
-      path.setAttribute('stroke-width', '0.80')
-      path.setAttribute('stroke-opacity', '0.6')
-      svg.appendChild(path)
-    }
-
     drawEllipse({width: 5, ratio: 3/5, stroke: '#e63946', strokeWidth: 0.3})
     drawEllipse({width: 8.2, ratio: 3.5/5, stroke: '#888', strokeWidth: 0.50})
     drawEllipticalRacks({width: 6.3, ratio: 3.25/5, offset: 0.1, count: 16, length: 0.80, widthRack: 0.4})
