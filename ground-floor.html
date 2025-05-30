@@ -60,7 +60,7 @@
     }
 
     const centreX = 5.5
-    const centreY = 4.5
+    const centreY = 3.5
 
     function drawEllipse({ cx = centreX, cy = centreY, width, ratio, stroke, strokeWidth, opacity = 1 }) {
       const ellipse = document.createElementNS(svgNS, 'ellipse')
@@ -181,10 +181,11 @@
     //drawEllipticalSpiralRamp({width: 10, ratio: 4/5, stroke: '#888', rampWidth: 0.8})
 
     // Staircase
-    const stairTowerCentreY = 8.7
-    drawEllipse({cy: stairTowerCentreY, width: 3.7, ratio: 3.5/5, stroke: '#888', strokeWidth: 0.50})
-    drawEllipse({cy: stairTowerCentreY, width: 1, ratio: 3.5/5, stroke: 'dodgerblue', strokeWidth: 0.50})
-    drawEllipticalRacks({cy: stairTowerCentreY, width: 2.3, ratio: 3.5/5, offset: 0.1, count: 16, length: 0.80, widthRack: 0.3})
+    const stairTowerCentreY = 7.7
+    const stairTowerRatio = 3.5/5
+    drawEllipse({cy: stairTowerCentreY, width: 3.7, ratio: stairTowerRatio, stroke: '#888', strokeWidth: 0.50})
+    drawEllipse({cy: stairTowerCentreY, width: 1, ratio: stairTowerRatio, stroke: 'dodgerblue', strokeWidth: 0.50})
+    drawEllipticalRacks({cy: stairTowerCentreY, width: 2.3, ratio: stairTowerRatio, offset: 0.1, count: 16, length: 0.80, widthRack: 0.3})
   </script>
 
   <ul>
