@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Parametric Ellipse with Grid</title>
+  <style>
+    body {
+      margin: 0;
+      background: white;
+    }
+    svg {
+      width: 100%;
+      height: auto;
+      max-height: 297mm;
+      display: block;
+    }
+    .grid {
+      stroke: #ccf;
+      stroke-width: 0.002;
+    }
+  </style>
+</head>
+<body>
+  <svg id="canvas" viewBox="0 0 10 7" xmlns="http://www.w3.org/2000/svg"></svg>
+
+  <script>
+    const svg = document.getElementById('canvas');
+    const svgNS = svg.namespaceURI;
+
+    // ⬛ Grid: 0.25 x 0.25 m
+    for (let x = 0.25; x < 10; x += 0.25) {
+      const line = document.createElementNS(svgNS, 'line');
+      line.setAttribute('x1', x);
+      line.setAttribute('y1', '0');
+      line.setAttribute('x2', x);
+      line.setAttribute('y2', '7');
+      line.setAttribute('class', 'grid');
+      svg.appendChild(line);
+    }
+    for (let y = 0.25; y < 7; y += 0.25) {
+      const line = document.createElementNS(svgNS, 'line');
+      line.setAttribute('x1', '0');
+      line.setAttribute('y1', y);
+      line.setAttribute('x2', '10');
+      line.setAttribute('y2', y);
+      line.setAttribute('class', 'grid');
+      svg.appendChild(line);
+    }
+
+    // ⭕ Parametric ellipse function
+    function drawEllipse({ cx, cy, width, ratio, stroke, strokeWidth }) {
+      const ellipse = document.createElementNS(svgNS, 'ellipse');
+      ellipse.setAttribute('cx', cx);
+      ellipse.setAttribute('cy', cy);
+      ellipse.setAttribute('rx', width / 2);
+      ellipse.setAttribute('ry', (width * ratio) / 2);
+      ellipse.setAttribute('fill', 'none');
+      ellipse.setAttribute('stroke', stroke);
+      ellipse.setAttribute('stroke-width', strokeWidth);
+      svg.appendChild(ellipse);
+    }
+
+    // ✅ Examples
+    drawEllipse({
+      cx: 5, cy: 3.5,
+      width: 5,
+      ratio: 3 / 5,
+      stroke: '#e63946',
+      strokeWidth: 0.3 // wall thickness in metres
+    });
+
+    drawEllipse({
+      cx: 5, cy: 3.5,
+      width: 8.5,
+      ratio: 3 / 5,
+      stroke: '#888',
+      strokeWidth: 0.5
+    });
+  </script>
+</body>
+</html>
