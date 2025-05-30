@@ -72,16 +72,62 @@
       svg.appendChild(ellipse)
     }
 
+    function drawEllipticalRacks({
+      cx = 5.5, cy = 4.5,
+      width,         // major axis length
+      ratio,         // b / a (minor / major)
+      offset = 0.1,  // how far from ellipse edge outward
+      count = 16,
+      length = 1.2,
+      widthRack = 0.4,
+      color = 'saddlebrown',
+      opacity = 0.8,
+      startAngle = 0
+    }) {
+      const a = width / 2
+      const b = (width * ratio) / 2
+
+      const deg2rad = angle => angle * Math.PI / 180
+      const stepAngle = 360 / count
+
+      for (let i = 0; i < count; i++) {
+        const angleDeg = startAngle + i * stepAngle
+        const angleRad = deg2rad(angleDeg)
+
+        // unit direction from centre
+        const ux = Math.cos(angleRad)
+        const uy = Math.sin(angleRad)
+
+        // point on ellipse boundary (parametric ellipse)
+        const ex = a * ux
+        const ey = b * uy
+
+        // extend normal by offset
+        const px = cx + ex + ux * offset
+        const py = cy + ey + uy * offset
+
+        const rect = document.createElementNS(svgNS, 'rect')
+        rect.setAttribute('x', (-length / 2).toString())
+        rect.setAttribute('y', (-widthRack / 2).toString())
+        rect.setAttribute('width', length.toString())
+        rect.setAttribute('height', widthRack.toString())
+        rect.setAttribute('fill', color)
+        rect.setAttribute('fill-opacity', opacity)
+        rect.setAttribute('transform', `translate(${px}, ${py}) rotate(${angleDeg})`)
+        svg.appendChild(rect)
+      }
+    }
+
     drawEllipse({width: 5, ratio: 3/5, stroke: '#e63946', strokeWidth: 0.3})
-    drawEllipse({width: 7, ratio: 3.5/5, stroke: 'black', strokeWidth: 0.03})
-    drawEllipse({width: 8.2, ratio: 3.75/5, stroke: 'black', strokeWidth: 0.03})
-    drawEllipse({width: 10.4, ratio: 4/5, stroke: '#888', strokeWidth: 0.5})
+    drawEllipse({width: 9, ratio: 4/5, stroke: '#888', strokeWidth: 0.5})
+    drawEllipticalRacks({width: 6.8, ratio: 3.5/5, offset: 0.1, count: 16, length: 1.2, widthRack: 0.4})
   </script>
 
   <ul>
     <li><b>Dome:</b> vents just off the ground to suck air out of the storage and circulate it properly.</li>
     <li><b>Dome:</b> roof window to allow releasing the heat when one is inside and closing it for when we need to charge the structure with heat.</li>
     <li><b>Dome:</b> translucent glass (bottles or glass blocks) in the ceiling.</li>
+    <li><b>Storage:</b> needs to be large to store all we need post-collapse.</li>
   </ul>
 </body>
 </html>
