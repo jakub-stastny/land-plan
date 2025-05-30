@@ -2,25 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Ground level plan</title>
+  <title>Dome floor plan</title>
   <style>
     body {
       margin: 0;
       background: white;
     }
-
     svg {
       width: 100%;
       height: auto;
       max-height: 297mm;
       display: block;
+      margin-bottom: 2rem;
     }
-
     .grid25 {
       stroke: #99ccee;
       stroke-width: 0.01;
     }
-
     .grid100 {
       stroke: #3377bb;
       stroke-width: 0.03;
@@ -29,41 +27,49 @@
 </head>
 <body>
   <h1>Ground floor</h1>
-  <svg id="canvas" viewBox="0 0 11 9" xmlns="http://www.w3.org/2000/svg"></svg>
+  <svg id="canvas-ground" viewBox="0 0 11 9" xmlns="http://www.w3.org/2000/svg"></svg>
+  <ul>
+    <li><b>Dome:</b> vents just off the ground to suck air out of the storage and circulate it properly.</li>
+    <li><b>Dome:</b> roof window to allow releasing the heat when one is inside and closing it for when we need to charge the structure with heat.</li>
+    <li><b>Dome:</b> translucent glass (bottles or glass blocks) in the ceiling.</li>
+    <li><b>Storage:</b> needs to be large to store all we need post-collapse.</li>
+  </ul>
+
+  <h1>Upper levels</h1>
+  <svg id="canvas-upper" viewBox="0 0 11 9" xmlns="http://www.w3.org/2000/svg"></svg>
+  <ul>
+    <li><b>Bedroom:</b> goes right above the dome, possibly suspended and covered by a woolen blanket.</li>
+    PERHAPS DOME not dome after all, but rather with a wooden ceiling? but then it could be buffering somewhat poorly? Think it through well. Also, how about the glass blocks?
+  </ul>
 
   <script>
-    const svg = document.getElementById('canvas')
-    const svgNS = svg.namespaceURI
-
     const gridSpacing = 0.25
-    const maxX = 11
-    const maxY = 9
 
-    for (let x = 0; x <= maxX + 0.0001; x += gridSpacing ) {
-      const line = document.createElementNS(svgNS, 'line')
-      line.setAttribute('x1', x.toString())
-      line.setAttribute('y1', '0')
-      line.setAttribute('x2', x.toString())
-      line.setAttribute('y2', maxY.toString())
-      line.setAttribute('class', (Math.abs(x % 1) < 1e-6) ? 'grid100' : 'grid25')
-      svg.appendChild(line)
+    function showGrid(svg, maxX, maxY) {
+      const svgNS = svg.namespaceURI
+      for (let x = 0; x <= maxX + 0.0001; x += gridSpacing ) {
+        const line = document.createElementNS(svgNS, 'line')
+        line.setAttribute('x1', x)
+        line.setAttribute('y1', 0)
+        line.setAttribute('x2', x)
+        line.setAttribute('y2', maxY)
+        line.setAttribute('class', (Math.abs(x % 1) < 1e-6) ? 'grid100' : 'grid25')
+        svg.appendChild(line)
+      }
+
+      for (let y = 0; y <= maxY + 0.0001; y += gridSpacing) {
+        const line = document.createElementNS(svgNS, 'line')
+        line.setAttribute('x1', 0)
+        line.setAttribute('y1', y)
+        line.setAttribute('x2', maxX)
+        line.setAttribute('y2', y)
+        line.setAttribute('class', (Math.abs(y % 1) < 1e-6) ? 'grid100' : 'grid25')
+        svg.appendChild(line)
+      }
     }
 
-    for (let y = 0; y <= maxY + 0.0001; y += gridSpacing) {
-      const line = document.createElementNS(svgNS, 'line')
-      line.setAttribute('x1', '0')
-      line.setAttribute('y1', y.toString())
-      line.setAttribute('x2', maxX.toString())
-      line.setAttribute('y2', y.toString())
-      line.setAttribute('class', (Math.abs(y % 1) < 1e-6) ? 'grid100' : 'grid25')
-      svg.appendChild(line)
-    }
-
-    const centreX = 5.5
-    const centreY = 3.5
-
-    function drawEllipse({ cx = centreX, cy = centreY, width, ratio, stroke, strokeWidth, opacity = 1 }) {
-      const ellipse = document.createElementNS(svgNS, 'ellipse')
+    function drawEllipse(svg, { cx, cy, width, ratio, stroke, strokeWidth, opacity = 0.8 }) {
+      const ellipse = document.createElementNS(svg.namespaceURI, 'ellipse')
       ellipse.setAttribute('cx', cx)
       ellipse.setAttribute('cy', cy)
       ellipse.setAttribute('rx', width / 2)
@@ -71,15 +77,15 @@
       ellipse.setAttribute('fill', 'none')
       ellipse.setAttribute('stroke', stroke)
       ellipse.setAttribute('stroke-width', strokeWidth)
-      ellipse.setAttribute('stroke-opacity', 0.8)
+      ellipse.setAttribute('stroke-opacity', opacity)
       svg.appendChild(ellipse)
     }
 
-    function drawEllipticalRacks({
-      cx = centreX, cy = centreY,
-      width,         // major axis length
-      ratio,         // b / a (minor / major)
-      offset = 0.1,  // how far from ellipse edge outward
+    function drawEllipticalRacks(svg, {
+      cx, cy,
+      width,            // major axis length
+      ratio,            // b / a (minor / major)
+      offset = 0.1,     // how far from ellipse edge outward
       count = 16,
       length = 1.2,
       widthRack = 0.4,
@@ -93,19 +99,18 @@
       const deg2rad = angle => angle * Math.PI / 180
       const stepAngle = 360 / count
 
+      const svgNS = svg.namespaceURI
+
       for (let i = 0; i < count; i++) {
         const angleDeg = startAngle + i * stepAngle
         const angleRad = deg2rad(angleDeg)
 
-        // unit direction from centre
         const ux = Math.cos(angleRad)
         const uy = Math.sin(angleRad)
 
-        // point on ellipse boundary (parametric ellipse)
         const ex = a * ux
         const ey = b * uy
 
-        // extend normal by offset
         const px = cx + ex + ux * offset
         const py = cy + ey + uy * offset
 
@@ -121,35 +126,27 @@
       }
     }
 
-    function drawStaircase() {
-      const stairTowerCentreY = 7.7
-      const stairTowerRatio = 3.5/5
-      drawEllipse({cy: stairTowerCentreY, width: 3.7, ratio: stairTowerRatio, stroke: '#888', strokeWidth: 0.50})
-      drawEllipse({cy: stairTowerCentreY, width: 1, ratio: stairTowerRatio, stroke: 'dodgerblue', strokeWidth: 0.50})
-      drawEllipticalRacks({cy: stairTowerCentreY, width: 2.3, ratio: stairTowerRatio, offset: 0.1, count: 16, length: 0.80, widthRack: 0.3})
+    function drawStaircase(svg, { cx, cy, stairTowerRatio = 3.5 / 5 }) {
+      drawEllipse(svg, {cx, cy, width: 3.7, ratio: stairTowerRatio, stroke: '#888', strokeWidth: 0.50})
+      drawEllipse(svg, {cx, cy, width: 1, ratio: stairTowerRatio, stroke: 'dodgerblue', strokeWidth: 0.50})
+      drawEllipticalRacks(svg, {cx, cy, width: 2.3, ratio: stairTowerRatio, offset: 0.1, count: 16, length: 0.80, widthRack: 0.3})
     }
 
-    drawEllipse({width: 5, ratio: 3/5, stroke: '#e63946', strokeWidth: 0.3})
-    drawEllipse({width: 8.2, ratio: 3.5/5, stroke: '#888', strokeWidth: 0.50})
-    drawEllipticalRacks({width: 6.3, ratio: 3.25/5, offset: 0.1, count: 16, length: 0.80, widthRack: 0.4})
+    // Set up canvases
+    const ground = document.getElementById('canvas-ground')
+    const upper = document.getElementById('canvas-upper')
 
-    drawStaircase()
+    showGrid(ground, 11, 9)
+    showGrid(upper, 11, 9)
+
+    const centreX = 5.5
+    const centreY = 3.5
+
+    drawEllipse(ground, {cx: centreX, cy: centreY, width: 5, ratio: 3/5, stroke: '#e63946', strokeWidth: 0.3})
+    drawEllipse(ground, {cx: centreX, cy: centreY, width: 8.2, ratio: 3.5/5, stroke: '#888', strokeWidth: 0.50})
+    drawEllipticalRacks(ground, {cx: centreX, cy: centreY, width: 6.3, ratio: 3.25/5, offset: 0.1, count: 16, length:
+0.80, widthRack: 0.4})
+    drawStaircase(ground, {cx: 5.5, cy: 7.7})
   </script>
-
-  <ul>
-    <li><b>Dome:</b> vents just off the ground to suck air out of the storage and circulate it properly.</li>
-    <li><b>Dome:</b> roof window to allow releasing the heat when one is inside and closing it for when we need to charge the structure with heat.</li>
-    <li><b>Dome:</b> translucent glass (bottles or glass blocks) in the ceiling.</li>
-    <li><b>Storage:</b> needs to be large to store all we need post-collapse.</li>
-  </ul>
-
-  <h1>Upper levels</h1>
-  <!--
-    TODO: add another canvas, ctverecky (make a fn)
-  -->
-  <ul>
-    <li><b>Bedroom:</b> goes right above the dome, possibly suspended and covered by a woolen blanket.</li>
-    PERHAPS DOME not dome after all, but rather with a wooden ceiling? but then it could be buffering somewhat poorly? Think it through well. Also, how about the glass blocks?
-  </ul>
 </body>
 </html>
