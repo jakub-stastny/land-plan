@@ -121,17 +121,19 @@
       }
     }
 
+    function drawStaircase() {
+      const stairTowerCentreY = 7.7
+      const stairTowerRatio = 3.5/5
+      drawEllipse({cy: stairTowerCentreY, width: 3.7, ratio: stairTowerRatio, stroke: '#888', strokeWidth: 0.50})
+      drawEllipse({cy: stairTowerCentreY, width: 1, ratio: stairTowerRatio, stroke: 'dodgerblue', strokeWidth: 0.50})
+      drawEllipticalRacks({cy: stairTowerCentreY, width: 2.3, ratio: stairTowerRatio, offset: 0.1, count: 16, length: 0.80, widthRack: 0.3})
+    }
+
     drawEllipse({width: 5, ratio: 3/5, stroke: '#e63946', strokeWidth: 0.3})
     drawEllipse({width: 8.2, ratio: 3.5/5, stroke: '#888', strokeWidth: 0.50})
     drawEllipticalRacks({width: 6.3, ratio: 3.25/5, offset: 0.1, count: 16, length: 0.80, widthRack: 0.4})
-    //drawEllipticalSpiralRamp({width: 10, ratio: 4/5, stroke: '#888', rampWidth: 0.8})
 
-    // Staircase
-    const stairTowerCentreY = 7.7
-    const stairTowerRatio = 3.5/5
-    drawEllipse({cy: stairTowerCentreY, width: 3.7, ratio: stairTowerRatio, stroke: '#888', strokeWidth: 0.50})
-    drawEllipse({cy: stairTowerCentreY, width: 1, ratio: stairTowerRatio, stroke: 'dodgerblue', strokeWidth: 0.50})
-    drawEllipticalRacks({cy: stairTowerCentreY, width: 2.3, ratio: stairTowerRatio, offset: 0.1, count: 16, length: 0.80, widthRack: 0.3})
+    drawStaircase()
   </script>
 
   <ul>
