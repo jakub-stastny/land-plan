@@ -28,6 +28,7 @@
   </style>
 </head>
 <body>
+  <h1>Ground floor</h1>
   <svg id="canvas" viewBox="0 0 11 9" xmlns="http://www.w3.org/2000/svg"></svg>
 
   <script>
@@ -58,7 +59,10 @@
       svg.appendChild(line)
     }
 
-    function drawEllipse({ cx = 5.5, cy = 4.5, width, ratio, stroke, strokeWidth, opacity = 1 }) {
+    const centreX = 5.5
+    const centreY = 4.5
+
+    function drawEllipse({ cx = centreX, cy = centreY, width, ratio, stroke, strokeWidth, opacity = 1 }) {
       const ellipse = document.createElementNS(svgNS, 'ellipse')
       ellipse.setAttribute('cx', cx)
       ellipse.setAttribute('cy', cy)
@@ -72,7 +76,7 @@
     }
 
     function drawEllipticalRacks({
-      cx = 5.5, cy = 4.5,
+      cx = centreX, cy = centreY,
       width,         // major axis length
       ratio,         // b / a (minor / major)
       offset = 0.1,  // how far from ellipse edge outward
@@ -117,63 +121,70 @@
       }
     }
 
-function drawEllipticalSpiralRamp({
-  cx = 5.5, cy = 4.5,
-  width,
-  ratio,
-  rampWidth = 0.8,
-  turns = 1,
-  steps = 200,
-  fill = '#d16c42',
-  opacity = 0.6
-}) {
-  const aStart = width / 2
-  const bStart = (width * ratio) / 2
-  const aEnd = aStart - rampWidth
-  const bEnd = bStart - rampWidth * ratio
+    function drawEllipticalSpiralRamp({
+      cx = centreX, cy = centreY,
+      width,
+      ratio,
+      rampWidth = 0.8,
+      turns = 1,
+      steps = 200,
+      fill = '#d16c42',
+      opacity = 0.6
+    }) {
+      const aStart = width / 2
+      const bStart = (width * ratio) / 2
+      const aEnd = aStart - rampWidth
+      const bEnd = bStart - rampWidth * ratio
 
-  const outerPoints = []
-  const innerPoints = []
+      const outerPoints = []
+      const innerPoints = []
 
-  for (let i = 0; i <= steps; i++) {
-    const t = i / steps
-    const angle = 2 * Math.PI * turns * t
+      for (let i = 0; i <= steps; i++) {
+        const t = i / steps
+        const angle = 2 * Math.PI * turns * t
 
-    const a = aStart - t * (aStart - aEnd)
-    const b = bStart - t * (bStart - bEnd)
+        const a = aStart - t * (aStart - aEnd)
+        const b = bStart - t * (bStart - bEnd)
 
-    const x = cx + a * Math.cos(angle)
-    const y = cy + b * Math.sin(angle)
-    outerPoints.push([x, y])
-  }
+        const x = cx + a * Math.cos(angle)
+        const y = cy + b * Math.sin(angle)
+        outerPoints.push([x, y])
+      }
 
-  for (let i = steps; i >= 0; i--) {
-    const t = i / steps
-    const angle = 2 * Math.PI * turns * t
+      for (let i = steps; i >= 0; i--) {
+        const t = i / steps
+        const angle = 2 * Math.PI * turns * t
 
-    const a = aStart - t * (aStart - aEnd)
-    const b = bStart - t * (bStart - bEnd)
+        const a = aStart - t * (aStart - aEnd)
+        const b = bStart - t * (bStart - bEnd)
 
-    const x = cx + (a - 0.0001) * Math.cos(angle)
-    const y = cy + (b - 0.0001) * Math.sin(angle)
-    innerPoints.push([x, y])
-  }
+        const x = cx + (a - 0.0001) * Math.cos(angle)
+        const y = cy + (b - 0.0001) * Math.sin(angle)
+        innerPoints.push([x, y])
+      }
 
-  const d = [...outerPoints, ...innerPoints].map(
-    (p, i) => (i === 0 ? 'M' : 'L') + p[0] + ' ' + p[1]
-  ).join(' ') + ' Z'
+      const d = [...outerPoints, ...innerPoints].map(
+        (p, i) => (i === 0 ? 'M' : 'L') + p[0] + ' ' + p[1]
+      ).join(' ') + ' Z'
 
-  const path = document.createElementNS(svgNS, 'path')
-  path.setAttribute('d', d)
-  path.setAttribute('stroke', '#733')
-  path.setAttribute('stroke-width', '0.80')
-  path.setAttribute('stroke-opacity', '0.6')
-  svg.appendChild(path)
-}
+      const path = document.createElementNS(svgNS, 'path')
+      path.setAttribute('d', d)
+      path.setAttribute('stroke', '#733')
+      path.setAttribute('stroke-width', '0.80')
+      path.setAttribute('stroke-opacity', '0.6')
+      svg.appendChild(path)
+    }
 
     drawEllipse({width: 5, ratio: 3/5, stroke: '#e63946', strokeWidth: 0.3})
-    drawEllipticalRacks({width: 6.8, ratio: 3.5/5, offset: 0.1, count: 16, length: 1.2, widthRack: 0.4})
-    drawEllipticalSpiralRamp({width: 10, ratio: 4/5, stroke: '#888', rampWidth: 0.8})
+    drawEllipse({width: 8.2, ratio: 3.5/5, stroke: '#888', strokeWidth: 0.50})
+    drawEllipticalRacks({width: 6.3, ratio: 3.25/5, offset: 0.1, count: 16, length: 0.80, widthRack: 0.4})
+    //drawEllipticalSpiralRamp({width: 10, ratio: 4/5, stroke: '#888', rampWidth: 0.8})
+
+    // Staircase
+    const stairTowerCentreY = 8.7
+    drawEllipse({cy: stairTowerCentreY, width: 3.7, ratio: 3.5/5, stroke: '#888', strokeWidth: 0.50})
+    drawEllipse({cy: stairTowerCentreY, width: 1, ratio: 3.5/5, stroke: 'dodgerblue', strokeWidth: 0.50})
+    drawEllipticalRacks({cy: stairTowerCentreY, width: 2.3, ratio: 3.5/5, offset: 0.1, count: 16, length: 0.80, widthRack: 0.3})
   </script>
 
   <ul>
@@ -181,6 +192,15 @@ function drawEllipticalSpiralRamp({
     <li><b>Dome:</b> roof window to allow releasing the heat when one is inside and closing it for when we need to charge the structure with heat.</li>
     <li><b>Dome:</b> translucent glass (bottles or glass blocks) in the ceiling.</li>
     <li><b>Storage:</b> needs to be large to store all we need post-collapse.</li>
+  </ul>
+
+  <h1>Upper levels</h1>
+  <!--
+    TODO: add another canvas, ctverecky (make a fn)
+  -->
+  <ul>
+    <li><b>Bedroom:</b> goes right above the dome, possibly suspended and covered by a woolen blanket.</li>
+    PERHAPS DOME not dome after all, but rather with a wooden ceiling? but then it could be buffering somewhat poorly? Think it through well. Also, how about the glass blocks?
   </ul>
 </body>
 </html>
