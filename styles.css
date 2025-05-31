@@ -1,0 +1,26 @@
+body {
+  margin: 0;
+  background: white;
+}
+
+h1, h2, h3, h4, h5, h6, table, p {
+  padding-left: 20px;
+}
+
+svg {
+  width: 100%;
+  height: auto;
+  max-height: 297mm;
+  display: block;
+  margin-bottom: 2rem;
+}
+
+.grid25 {
+  stroke: #99ccee;
+  stroke-width: 0.01;
+}
+
+.grid100 {
+  stroke: #3377bb;
+  stroke-width: 0.03;
+}
